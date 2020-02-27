@@ -1,13 +1,12 @@
 package Client;
 
 import Messages.Request;
+import Messages.Response;
 
-import java.net.*;
 import java.io.*;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 import java.security.KeyStore;
-import java.security.cert.*;
 import java.util.Scanner;
 
 public class Client {
@@ -84,31 +83,7 @@ public class Client {
         }
     }
 
-    public void communicate() throws IOException {
-        BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String msg;
-        for (;;) {
-            System.out.print(">");
-            msg = read.readLine();
-            if (msg.equalsIgnoreCase("quit")) {
-                break;
-            }
-            System.out.print("sending '" + msg + "' to server...");
-            out.println(msg);
-            out.flush();
-            System.out.println("done");
-
-            System.out.println("received '" + in.readLine() + "' from server\n");
-        }
-        in.close();
-        out.close();
-        read.close();
-        socket.close();
-    }
-
-    public void communicateObject() throws IOException {
+    public void sendRequest() throws IOException {
         Request request;
         ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
         BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
@@ -116,16 +91,34 @@ public class Client {
         String patient = read.readLine();
         System.out.println("Request type: ");
         String requestType = read.readLine();
-        if(requestType.equals("Write")){
+        if(requestType.equals("Write")) {
             System.out.println("File path: ");
             String filePath = read.readLine();
             request = new Request(patient, requestType, filePath);
-        }else{
+        } else {
             request = new Request(patient, requestType);
         }
 
         os.writeObject(request);
-        socket.close();
+
+    }
+
+    public void recieveResponse() {
+        try{
+            ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
+            Response response = (Response)is.readObject();
+            System.out.println(response.getStatus());
+            if(response.getRecord() != null){
+                Scanner myReader = new Scanner(response.getRecord());
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    System.out.println(data);
+                }
+                myReader.close();
+            }
+        } catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
@@ -136,9 +129,17 @@ public class Client {
             e.printStackTrace();
         }
 
-        try{
-            client.communicateObject();
+        try {
+            client.sendRequest();
         } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        client.recieveResponse();
+
+        try {
+            client.socket.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
