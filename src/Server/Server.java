@@ -2,6 +2,6 @@ package Server;
 
 public class Server {
     public static void main(String[] args) {
-        System.out.println("i am the server");
+        System.out.println("I am the server");
     }
 }
