@@ -50,12 +50,42 @@ public class Server implements Runnable {
         Response response;
 
         //Run only if access is given!
-        if(requestType.equals("Read")){
-            String fileName = "../resources/database/" + request.getPatient() + ".txt";
-            System.out.println(fileName);
-            response = new Response("Success", fileName);
-        } else {
-            response = new Response("Success");
+        String fileName = "../resources/database/" + request.getPatient() + ".txt";
+
+        switch (requestType) {
+            case "Read":
+                response = new Response("Success", fileName);
+                break;
+            case "Write": {
+                File record = new File(fileName);
+                try {
+                    FileWriter fw = new FileWriter(record, false);
+                    Scanner myReader = new Scanner(request.getRecord());
+                    while (myReader.hasNextLine()) {
+                        String data = myReader.nextLine();
+                        fw.write(data);
+                    }
+                    myReader.close();
+                    response = new Response("Success");
+                } catch (IOException e) {
+                    response = new Response("Failure");
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case "Delete": {
+                File record = new File(fileName);
+                if (record.exists()) {
+                    record.delete();
+                    response = new Response("Success");
+                } else {
+                    response = new Response("Failure");
+                }
+                break;
+            }
+            default:
+                response = new Response("Failure");
+                break;
         }
 
         os.writeObject(response);
