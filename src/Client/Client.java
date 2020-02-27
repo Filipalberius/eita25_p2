@@ -82,9 +82,7 @@ public class Client {
     private void recieveResponse() {
         try{
             InputStream is_tmp = socket.getInputStream();
-            System.out.println("hej");
             ObjectInputStream is = new ObjectInputStream(is_tmp);
-            System.out.println("hej2");
             Response response = (Response)is.readObject();
             System.out.println(response.getStatus());
 

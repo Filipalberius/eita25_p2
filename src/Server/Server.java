@@ -30,26 +30,12 @@ public class Server implements Runnable {
             System.out.println("client connected");
             System.out.println("client name (cert subject DN field): " + subject);
 
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-
             //Receive Request
-
             ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
             Request request =(Request)is.readObject();
-            out.println("Patient" + request.getPatient());
-            out.flush();
-            out.close();
 
             //Send Response
-
             sendResponse(socket, request);
-
-//            Scanner myReader = new Scanner(request.getRecord());
-//            while (myReader.hasNextLine()) {
-//                String data = myReader.nextLine();
-//                System.out.println(data);
-//            }
-//            myReader.close();
 
             socket.close();
         } catch (IOException | ClassNotFoundException e) {
@@ -73,7 +59,6 @@ public class Server implements Runnable {
         }
 
         os.writeObject(response);
-
     }
 
     private void newListener() {
