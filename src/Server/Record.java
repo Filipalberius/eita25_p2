@@ -1,5 +1,7 @@
 package Server;
 
+import Messages.Request;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -39,10 +41,7 @@ public class Record {
     }
 
     public static void main(String[] args) {
-        try {
-            Record record = new Record(new File("/h/d6/h/el0860de-s/Documents/EITA25/eita25_p2/RecordTestFile"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        System.out.println(AccessControl.checkCredentials("Doctor Alban, Division X", new Request("Kent", "read")));
     }
+
 }
