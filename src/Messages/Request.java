@@ -2,8 +2,9 @@ package Messages;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 
-public class Request {
+public class Request implements Serializable {
     private String patient;
     private String requestType;
     private File record;
