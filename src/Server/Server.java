@@ -1,5 +1,7 @@
 package Server;
 
+import Messages.Request;
+
 import java.io.*;
 import java.net.*;
 import java.security.KeyStore;
@@ -31,24 +33,22 @@ public class Server implements Runnable {
             PrintWriter out;
             BufferedReader in;
             out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            String clientMsg;
-            while ((clientMsg = in.readLine()) != null) {
-                String rev = new StringBuilder(clientMsg).reverse().toString();
-                System.out.println("received '" + clientMsg + "' from client");
-                System.out.print("sending '" + rev + "' to client...");
-                out.println(rev);
+            //Object receive
+
+            ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
+            Request request =(Request)is.readObject();
+            socket.close();
+                out.println("Patient" + request.getPatient());
                 out.flush();
-                System.out.println("done\n");
-            }
-            in.close();
+
             out.close();
+            System.out.println("Patient: " + request.getPatient());
             socket.close();
             numConnectedClients--;
             System.out.println("client disconnected");
             System.out.println(numConnectedClients + " concurrent connection(s)\n");
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println("Client died: " + e.getMessage());
             e.printStackTrace();
         }

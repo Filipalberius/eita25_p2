@@ -108,6 +108,26 @@ public class Client {
         socket.close();
     }
 
+    public void communicateObject() throws IOException {
+        Request request;
+        ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
+        BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Patient: ");
+        String patient = read.readLine();
+        System.out.println("Request type: ");
+        String requestType = read.readLine();
+        if(requestType.equals("Write")){
+            System.out.println("File path: ");
+            String filePath = read.readLine();
+            request = new Request(patient, requestType, filePath);
+        }else{
+            request = new Request(patient, requestType);
+        }
+
+        os.writeObject(request);
+        socket.close();
+    }
+
     public static void main(String[] args) {
         Client client = new Client();
         try {
@@ -117,7 +137,7 @@ public class Client {
         }
 
         try{
-            client.communicate();
+            client.communicateObject();
         } catch (Exception e){
             e.printStackTrace();
         }
