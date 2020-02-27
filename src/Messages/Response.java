@@ -5,24 +5,24 @@ import java.io.FileNotFoundException;
 
 public class Response {
     private String status;
-    private File journal;
+    private File record;
 
     public Response(String status){
         this.status = status;
     }
 
-    public Response(String status, String journalPath) throws FileNotFoundException{
+    public Response(String status, String recordPath) throws FileNotFoundException{
         this.status = status;
         try{
-            this.journal = new File(journalPath);
+            this.record = new File(recordPath);
         } catch (Exception e){
-            System.out.println("Can't find file " + journalPath);
+            System.out.println("Can't find file " + recordPath);
             throw new FileNotFoundException();
         }
     }
 
-    public File getJournal() {
-        return journal;
+    public File getRecord() {
+        return record;
     }
 
     public String getStatus() {

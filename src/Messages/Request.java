@@ -6,17 +6,15 @@ import java.io.FileNotFoundException;
 public class Request {
     private String patient;
     private String requestType;
-    private File journal;
+    private File record;
 
-    public Request(String patient, String requestType, String journalPath) throws FileNotFoundException {
+    public Request(String patient, String requestType, String recordPath) throws FileNotFoundException {
         this.patient = patient;
         this.requestType = requestType;
         try{
-            this.journal = new File(journalPath);
-            System.out.println(journal.getAbsolutePath());
-
+            this.record = new File(recordPath);
         } catch (Exception e){
-            System.out.println("File " + journalPath + " not found");
+            System.out.println("File " + recordPath + " not found");
             throw new FileNotFoundException();
         }
     }
@@ -34,7 +32,7 @@ public class Request {
         return requestType;
     }
 
-    public File getJournal() {
-        return this.journal;
+    public File getRecord() {
+        return this.record;
     }
 }
