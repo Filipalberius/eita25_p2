@@ -1,39 +1,22 @@
 # !/bin/bash
 
-echo "let the certifying commence!"
-
-#remove files
-rm private.key; rm certificate.crt; rm clienttruststore
-rm clientkeystore; rm cert_request.csr; rm signed.crt
-ls
-
-touch v3.ext
-
 #1
-openssl req -x509 \
--newkey rsa:2048 -nodes -keyout private.key \
--out certificate.crt \
--subj "/C=SE/ST=Scania/L=Lund/CN=CA"
+openssl genrsa -out ca.key 2048
+openssl req -new -x509 -key ca.key -out ca.crt -subj "/C=SE/ST=Scania/L=Lund/CN=CA"
 
 #2
-keytool -import -file certificate.crt  -alias CA \
--keystore clienttruststore -storepass password
+keytool -importcert -file ca.crt -keystore clienttruststore.jks -alias ca -storepass password
 
 #3
-keytool -genkeypair -keystore clientkeystore -alias client -storepass password \
--dname "CN=Filip Alberius (fi6470al-s) / Elmer Dellson (el0860de-s) / Erik Rolander (er1748ro-s) / Jonathan Blomdahl (jo1007bl-s), OU=D, O=LTH, L=Lund, S=Scania, C=SE"
+keytool -genkeypair -keystore clientkeystore.jks -alias clientkey -storepass password
 
 #4
-keytool -v -certreq -keystore clientkeystore -file cert_request.csr \
--alias client -storepass password
+keytool -certreq -file req.csr -keystore clientkeystore.jks -alias clientkey -storepass password
 
 #5
-openssl x509 -req -in cert_request.csr -CA certificate.crt \
--CAkey private.key -CAcreateserial -out signed.crt -extfile v3.ext
+openssl x509 -req -in req.csr -out req.signed -CA ca.crt -CAkey ca.key -CAcreateserial
 
 #6
-keytool -import -file certificate.crt -keystore clientkeystore \
--alias CA -storepass password
+keytool -importcert -file ca.crt -keystore clientkeystore.jks -alias ca -storepass password
 
-keytool -import -file signed.crt -keystore clientkeystore \
--alias client -storepass password
+keytool -importcert -file req.signed -keystore clientkeystore.jks -alias clientkey -storepass password

@@ -1,33 +1,24 @@
 package Client;
 
 import Messages.Request;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.net.*;
+import java.io.*;
+import javax.net.ssl.*;
+import javax.security.cert.X509Certificate;
+import java.security.KeyStore;
+import java.security.cert.*;
 
 public class Client {
-    private Request test1;
-    private Request test2;
 
-    private void testRequest() {
-        test1 = new Request("Smith", "Read");
-        try {
-            test2 = new Request("Smith", "Read", "resources//database//Smith.txt");
-            BufferedReader br = new BufferedReader(new FileReader(test2.getJournal()));
-            String st;
-            while ((st = br.readLine()) != null)
-                System.out.println(st);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private Request makeRequest(String patient, String requestType) {
+        return new Request(patient, requestType);
     }
 
 
     public static void main(String[] args) {
         System.out.println("I am the client");
         Client client = new Client();
-        client.testRequest();
+        Request test1 = client.makeRequest("Smith", "read");
+        Request test2 = client.makeRequest("Boris", "read");
     }
 }
