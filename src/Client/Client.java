@@ -6,6 +6,7 @@ import Messages.Response;
 import java.io.*;
 import javax.net.ssl.*;
 import java.security.KeyStore;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Client {
@@ -80,7 +81,10 @@ public class Client {
 
     private void recieveResponse() {
         try{
-            ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
+            InputStream is_tmp = socket.getInputStream();
+            System.out.println("hej");
+            ObjectInputStream is = new ObjectInputStream(is_tmp);
+            System.out.println("hej2");
             Response response = (Response)is.readObject();
             System.out.println(response.getStatus());
 
