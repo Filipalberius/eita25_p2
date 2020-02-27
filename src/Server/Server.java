@@ -5,6 +5,7 @@ import Messages.Request;
 import java.io.*;
 import java.net.*;
 import java.security.KeyStore;
+import java.util.Scanner;
 import javax.net.*;
 import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
@@ -31,7 +32,7 @@ public class Server implements Runnable {
             System.out.println(numConnectedClients + " concurrent connection(s)\n");
 
             PrintWriter out;
-            BufferedReader in;
+
             out = new PrintWriter(socket.getOutputStream(), true);
 
             //Object receive
@@ -43,7 +44,13 @@ public class Server implements Runnable {
                 out.flush();
 
             out.close();
-            System.out.println("Patient: " + request.getPatient());
+            Scanner myReader = new Scanner(request.getRecord());
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                System.out.println(data);
+            }
+            myReader.close();
+
             socket.close();
             numConnectedClients--;
             System.out.println("client disconnected");
