@@ -9,10 +9,10 @@ import javax.security.cert.X509Certificate;
 
 
 public class Server implements Runnable {
-    private ServerSocket serverSocket = null;
+    private ServerSocket serverSocket;
     private static int numConnectedClients = 0;
 
-    public Server(ServerSocket ss) throws IOException {
+    public Server(ServerSocket ss) {
         serverSocket = ss;
         newListener();
     }
@@ -28,12 +28,12 @@ public class Server implements Runnable {
             System.out.println("client name (cert subject DN field): " + subject);
             System.out.println(numConnectedClients + " concurrent connection(s)\n");
 
-            PrintWriter out = null;
-            BufferedReader in = null;
+            PrintWriter out;
+            BufferedReader in;
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            String clientMsg = null;
+            String clientMsg;
             while ((clientMsg = in.readLine()) != null) {
                 String rev = new StringBuilder(clientMsg).reverse().toString();
                 System.out.println("received '" + clientMsg + "' from client");
@@ -51,7 +51,6 @@ public class Server implements Runnable {
         } catch (IOException e) {
             System.out.println("Client died: " + e.getMessage());
             e.printStackTrace();
-            return;
         }
     }
 
@@ -77,7 +76,7 @@ public class Server implements Runnable {
 
     private static ServerSocketFactory getServerSocketFactory(String type) {
         if (type.equals("TLS")) {
-            SSLServerSocketFactory ssf = null;
+            SSLServerSocketFactory ssf;
             try { // set up key manager to perform server authentication
                 SSLContext ctx = SSLContext.getInstance("TLS");
                 KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");

@@ -8,6 +8,7 @@ import javax.net.ssl.*;
 import javax.security.cert.X509Certificate;
 import java.security.KeyStore;
 import java.security.cert.*;
+import java.util.Scanner;
 
 public class Client {
 
@@ -19,6 +20,9 @@ public class Client {
         return new Request(patient, requestType, recordPath);
     }
 
+    /*
+    Sets up a connection to the client
+     */
     private SSLSession createTLS(String[] args) throws Exception {
         String host = null;
         int port = -1;
@@ -38,9 +42,12 @@ public class Client {
         }
 
         try { /* set up a key manager for client authentication */
-            SSLSocketFactory factory = null;
+            SSLSocketFactory factory;
             try {
-                char[] password = "password".toCharArray();
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Enter your password: ");
+                char[] password = scanner.next().toCharArray();
+
                 KeyStore ks = KeyStore.getInstance("JKS");
                 KeyStore ts = KeyStore.getInstance("JKS");
                 KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
@@ -58,12 +65,6 @@ public class Client {
             SSLSocket socket = (SSLSocket) factory.createSocket(host, port);
             System.out.println("\nsocket before handshake:\n" + socket + "\n");
 
-            /*
-             * send http request
-             *
-             * See SSLSocketClient.java for more information about why
-             * there is a forced handshake here when using PrintWriters.
-             */
             socket.startHandshake();
 
             SSLSession session = socket.getSession();
