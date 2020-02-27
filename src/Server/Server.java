@@ -1,6 +1,7 @@
 package Server;
 
 import Messages.Request;
+import Messages.Response;
 
 import java.io.*;
 import java.net.*;
@@ -31,25 +32,24 @@ public class Server implements Runnable {
             System.out.println("client name (cert subject DN field): " + subject);
             System.out.println(numConnectedClients + " concurrent connection(s)\n");
 
-            PrintWriter out;
-
-            out = new PrintWriter(socket.getOutputStream(), true);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
             //Object receive
 
             ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
             Request request =(Request)is.readObject();
-            socket.close();
-                out.println("Patient" + request.getPatient());
-                out.flush();
-
+            out.println("Patient" + request.getPatient());
+            out.flush();
             out.close();
-            Scanner myReader = new Scanner(request.getRecord());
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                System.out.println(data);
-            }
-            myReader.close();
+
+            sendResponse(socket, request);
+
+//            Scanner myReader = new Scanner(request.getRecord());
+//            while (myReader.hasNextLine()) {
+//                String data = myReader.nextLine();
+//                System.out.println(data);
+//            }
+//            myReader.close();
 
             socket.close();
             numConnectedClients--;
@@ -106,5 +106,21 @@ public class Server implements Runnable {
             return ServerSocketFactory.getDefault();
         }
         return null;
+    }
+
+    private void sendResponse(SSLSocket socket, Request request) throws IOException {
+        ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
+        String requestType = request.getRequestType();
+        Response response;
+
+        //Run only if access is given!
+        if(requestType.equals("Read")){
+            String fileName = "../resources/database/" + request.getPatient() + ".txt";
+            response = new Response("Success", fileName);
+        } else {
+            response = new Response("Success");
+        }
+
+        os.writeObject(response);
     }
 }
