@@ -12,6 +12,8 @@ import java.util.Scanner;
 
 public class Client {
 
+    SSLSocket socket;
+
     private Request createRequest(String patient, String requestType) {
         return new Request(patient, requestType);
     }
@@ -62,7 +64,7 @@ public class Client {
             } catch (Exception e) {
                 throw new IOException(e.getMessage());
             }
-            SSLSocket socket = (SSLSocket) factory.createSocket(host, port);
+            socket = (SSLSocket) factory.createSocket(host, port);
             System.out.println("\nsocket before handshake:\n" + socket + "\n");
 
             socket.startHandshake();
@@ -82,11 +84,41 @@ public class Client {
         }
     }
 
+    public void communicate() throws IOException {
+        BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String msg;
+        for (;;) {
+            System.out.print(">");
+            msg = read.readLine();
+            if (msg.equalsIgnoreCase("quit")) {
+                break;
+            }
+            System.out.print("sending '" + msg + "' to server...");
+            out.println(msg);
+            out.flush();
+            System.out.println("done");
+
+            System.out.println("received '" + in.readLine() + "' from server\n");
+        }
+        in.close();
+        out.close();
+        read.close();
+        socket.close();
+    }
+
     public static void main(String[] args) {
         Client client = new Client();
         try {
             SSLSession sesh = client.createTLS(args);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try{
+            client.communicate();
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
