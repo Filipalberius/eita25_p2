@@ -13,6 +13,8 @@ public class Request {
         this.requestType = requestType;
         try{
             this.journal = new File(journalPath);
+            System.out.println(journal.getAbsolutePath());
+
         } catch (Exception e){
             System.out.println("File " + journalPath + " not found");
             throw new FileNotFoundException();
@@ -33,6 +35,6 @@ public class Request {
     }
 
     public File getJournal() {
-        return journal;
+        return this.journal;
     }
 }

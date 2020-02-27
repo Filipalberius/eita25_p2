@@ -1,0 +1,26 @@
+rm serverkeystore; rm cert_request_server.csr
+rm signed_server.crt
+
+#1
+keytool -genkeypair -keystore serverkeystore -alias server -storepass password \
+-dname "CN=MyServer, OU=D, O=LTH, L=Lund, S=Scania, C=SE"
+
+#2
+keytool -v -certreq -keystore serverkeystore -file cert_request_server.csr \
+-alias server -storepass password
+
+#3
+openssl x509 -req -in cert_request_server.csr -CA certificate.crt \
+-CAkey private.key -CAcreateserial -out signed_server.crt -extfile v3.ext
+
+#4
+keytool -import -file certificate.crt -keystore serverkeystore \
+-alias CA -storepass password
+
+keytool -import -file signed_server.crt -keystore serverkeystore \
+-alias server -storepass password
+
+#5
+keytool -import -file certificate.crt  -alias CA \
+-keystore servertruststore -storepass password
+
