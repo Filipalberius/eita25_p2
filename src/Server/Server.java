@@ -14,12 +14,12 @@ import javax.security.cert.X509Certificate;
 
 public class Server implements Runnable {
     private ServerSocket serverSocket;
-    private static int numConnectedClients = 0;
 
     public Server(ServerSocket ss) {
         serverSocket = ss;
         newListener();
     }
+
     public void run() {
         try {
             SSLSocket socket = (SSLSocket) serverSocket.accept();
@@ -27,20 +27,20 @@ public class Server implements Runnable {
             SSLSession session = socket.getSession();
             X509Certificate cert = (X509Certificate) session.getPeerCertificateChain()[0];
             String subject = cert.getSubjectDN().getName();
-            numConnectedClients++;
             System.out.println("client connected");
             System.out.println("client name (cert subject DN field): " + subject);
-            System.out.println(numConnectedClients + " concurrent connection(s)\n");
 
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-            //Object receive
+            //Receive Request
 
             ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
             Request request =(Request)is.readObject();
             out.println("Patient" + request.getPatient());
             out.flush();
             out.close();
+
+            //Send Response
 
             sendResponse(socket, request);
 
@@ -52,16 +52,33 @@ public class Server implements Runnable {
 //            myReader.close();
 
             socket.close();
-            numConnectedClients--;
-            System.out.println("client disconnected");
-            System.out.println(numConnectedClients + " concurrent connection(s)\n");
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Client died: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void newListener() { (new Thread(this)).start(); } // calls run()
+    private void sendResponse(SSLSocket socket, Request request) throws IOException {
+        ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
+        String requestType = request.getRequestType();
+        Response response;
+
+        //Run only if access is given!
+        if(requestType.equals("Read")){
+            String fileName = "../resources/database/" + request.getPatient() + ".txt";
+            System.out.println(fileName);
+            response = new Response("Success", fileName);
+        } else {
+            response = new Response("Success");
+        }
+
+        os.writeObject(response);
+
+    }
+
+    private void newListener() {
+        (new Thread(this)).start();
+    } // calls run()
 
     public static void main(String[] args) {
         System.out.println("\nServer Started\n");
@@ -106,21 +123,5 @@ public class Server implements Runnable {
             return ServerSocketFactory.getDefault();
         }
         return null;
-    }
-
-    private void sendResponse(SSLSocket socket, Request request) throws IOException {
-        ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
-        String requestType = request.getRequestType();
-        Response response;
-
-        //Run only if access is given!
-        if(requestType.equals("Read")){
-            String fileName = "../resources/database/" + request.getPatient() + ".txt";
-            response = new Response("Success", fileName);
-        } else {
-            response = new Response("Success");
-        }
-
-        os.writeObject(response);
     }
 }

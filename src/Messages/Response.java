@@ -2,8 +2,9 @@ package Messages;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 
-public class Response {
+public class Response implements Serializable {
     private String status;
     private File record;
 
@@ -13,12 +14,7 @@ public class Response {
 
     public Response(String status, String recordPath) throws FileNotFoundException{
         this.status = status;
-        try{
-            this.record = new File(recordPath);
-        } catch (Exception e){
-            System.out.println("Can't find file " + recordPath);
-            throw new FileNotFoundException();
-        }
+        this.record = new File(recordPath);
     }
 
     public File getRecord() {
