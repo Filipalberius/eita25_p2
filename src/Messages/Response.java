@@ -24,4 +24,8 @@ public class Response implements Serializable {
     public String getStatus() {
         return status;
     }
+
+    public String toString(){
+        return status;
+    }
 }

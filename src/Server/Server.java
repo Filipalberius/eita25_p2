@@ -36,7 +36,8 @@ public class Server implements Runnable {
             Request request =(Request)is.readObject();
 
             //Send Response
-            sendResponse(socket, request, subject);
+            Audit audit = new Audit();
+            sendResponse(socket, request, subject, audit);
 
             socket.close();
         } catch (IOException | ClassNotFoundException e) {
@@ -45,7 +46,7 @@ public class Server implements Runnable {
         }
     }
 
-    private void sendResponse(SSLSocket socket, Request request, String subject) throws IOException {
+    private void sendResponse(SSLSocket socket, Request request, String subject, Audit audit) throws IOException {
         ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
         String requestType = request.getRequestType();
         Response response;
@@ -74,8 +75,11 @@ public class Server implements Runnable {
                     response = new Response("Failure");
                     break;
             }
+
+            audit.addEntry(subject, request, response);
         } else {
             response = new Response("Access Denied");
+            audit.addEntry(subject, request, response);
         }
         os.writeObject(response);
     }
@@ -85,7 +89,6 @@ public class Server implements Runnable {
         return new Response("Success");
     }
 
-    //TODO: fix this
     private Response deleteFile(File record) {
         if (record.exists()) {
             record.delete();
@@ -95,7 +98,6 @@ public class Server implements Runnable {
         }
     }
 
-    //TODO: fix this
     private Response writeFile(Request request, File record) {
         try {
             if(record.exists()){

@@ -36,4 +36,8 @@ public class Request implements Serializable {
     public File getRecord() {
         return this.record;
     }
+
+    public String toString(){
+        return patient + ", " + requestType;
+    }
 }
