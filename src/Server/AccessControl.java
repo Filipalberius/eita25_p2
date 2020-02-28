@@ -44,7 +44,7 @@ public class AccessControl {
         }
 
         if (request.getRequestType().toLowerCase().matches("delete")) {
-            access = (requesterDivision.matches("Government"));
+            access = (requesterName.matches("Government"));
         }
 
         if (request.getRequestType().toLowerCase().matches("create")) {
