@@ -54,16 +54,20 @@ public class Server implements Runnable {
             String fileName = "../resources/database/" + request.getPatient() + ".txt";
             File record = new File(fileName);
 
-            switch (requestType) {
-                case "Read":
+            switch (requestType.toLowerCase()) {
+                case "read":
                     response = new Response("Success", record);
                     break;
-                case "Write": {
+                case "write": {
                     response = writeFile(request, record);
                     break;
                 }
-                case "Delete": {
+                case "delete": {
                     response = deleteFile(record);
+                    break;
+                }
+                case "create": {
+                    response = createFile(record);
                     break;
                 }
                 default:
@@ -73,12 +77,15 @@ public class Server implements Runnable {
         } else {
             response = new Response("Access Denied");
         }
-        //Run only if access is given!
-
-
         os.writeObject(response);
     }
 
+    //TODO
+    private Response createFile(File record) {
+        return new Response("Success");
+    }
+
+    //TODO: fix this
     private Response deleteFile(File record) {
         if (record.exists()) {
             record.delete();
@@ -88,16 +95,21 @@ public class Server implements Runnable {
         }
     }
 
+    //TODO: fix this
     private Response writeFile(Request request, File record) {
         try {
-            FileWriter fw = new FileWriter(record, false);
-            Scanner myReader = new Scanner(request.getRecord());
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                fw.write(data);
+            if(record.exists()){
+                FileWriter fw = new FileWriter(record, false);
+                Scanner myReader = new Scanner(request.getRecord());
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    fw.write(data);
+                }
+                myReader.close();
+                return new Response("Success");
+            } else {
+                return new Response("Record does not exist.");
             }
-            myReader.close();
-            return new Response("Success");
         } catch (IOException e) {
             return new Response("Failure");
         }

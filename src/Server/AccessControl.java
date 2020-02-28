@@ -37,9 +37,21 @@ public class AccessControl {
 
         boolean access = false;
 
-        if (request.getRequestType().matches("read")) {
+        if (request.getRequestType().toLowerCase().matches("read")) {
             access = (requesterName.matches(record.getDoctor()) || requesterName.matches(record.getNurse()) ||
-                    requesterDivision.matches(record.getDivision()) || requesterName.matches(record.getPatient()));
+                    requesterDivision.matches(record.getDivision()) || requesterName.matches(record.getPatient()) || requesterDivision.matches("Government"));
+        }
+
+        if (request.getRequestType().toLowerCase().matches("write")) {
+            access = (requesterName.matches(record.getDoctor()) || requesterName.matches(record.getNurse()));
+        }
+
+        if (request.getRequestType().toLowerCase().matches("delete")) {
+            access = (requesterDivision.matches("Government"));
+        }
+
+        if (request.getRequestType().toLowerCase().matches("create")) {
+            access = (requesterName.substring(0,2).matches("Dr"));
         }
 
         return access;
