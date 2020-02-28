@@ -5,6 +5,7 @@ import Messages.Response;
 
 import java.io.*;
 import javax.net.ssl.*;
+import java.nio.channels.FileChannel;
 import java.security.KeyStore;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -92,14 +93,16 @@ public class Client {
             System.out.println(response.getStatus());
 
             if(response.getRecord() != null){
-                File record = new File("Client/record");
-
-                if(record.createNewFile()){
+                File file = new File("Client/record.txt");
+                if(file.createNewFile()){
                     System.out.println("File created in directory");
                 } else {
-                    System.out.println("Failure");
+                    System.out.println("File already exists");
                 }
 
+                FileChannel src = new FileInputStream(response.getRecord()).getChannel();
+                FileChannel dest = new FileOutputStream(file).getChannel();
+                dest.transferFrom(src, 0, src.size());
             }
 
         } catch (IOException | ClassNotFoundException e){
