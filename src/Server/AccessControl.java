@@ -9,8 +9,7 @@ import java.io.FileNotFoundException;
 public class AccessControl {
 
     public static Boolean checkCredentials(String requester, Request request) {
-        String recordPath = "/h/d6/h/el0860de-s/Documents/EITA25/eita25_p2/resources/database/" +
-                request.getPatient() + ".txt";
+        String recordPath = "../resources/database/" + request.getPatient() + ".txt";
         Record record = null;
         try {
             record = new Record(new File(recordPath));

@@ -12,9 +12,9 @@ public class Response implements Serializable {
         this.status = status;
     }
 
-    public Response(String status, String recordPath) throws FileNotFoundException{
+    public Response(String status, File record) throws FileNotFoundException{
         this.status = status;
-        this.record = new File(recordPath);
+        this.record = record;
     }
 
     public File getRecord() {

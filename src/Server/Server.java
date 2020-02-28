@@ -27,6 +27,15 @@ public class Server implements Runnable {
             SSLSession session = socket.getSession();
             X509Certificate cert = (X509Certificate) session.getPeerCertificateChain()[0];
             String subject = cert.getSubjectDN().getName();
+            String requester;
+            String[] split = subject.split(",");
+            for (String x : split) {
+                if (x.contains("CN=")) {
+                    requester = x.trim();
+                    System.out.println(x.trim());
+                }
+            }
+
             System.out.println("client connected");
             System.out.println("client name (cert subject DN field): " + subject);
 
@@ -49,38 +58,23 @@ public class Server implements Runnable {
         String requestType = request.getRequestType();
         Response response;
 
+        //if(AccessControl.checkCredentials()){
+
+        //}
         //Run only if access is given!
         String fileName = "../resources/database/" + request.getPatient() + ".txt";
+        File record = new File(fileName);
 
         switch (requestType) {
             case "Read":
-                response = new Response("Success", fileName);
+                response = new Response("Success", record);
                 break;
             case "Write": {
-                File record = new File(fileName);
-                try {
-                    FileWriter fw = new FileWriter(record, false);
-                    Scanner myReader = new Scanner(request.getRecord());
-                    while (myReader.hasNextLine()) {
-                        String data = myReader.nextLine();
-                        fw.write(data);
-                    }
-                    myReader.close();
-                    response = new Response("Success");
-                } catch (IOException e) {
-                    response = new Response("Failure");
-                    e.printStackTrace();
-                }
+                response = writeFile(request, record);
                 break;
             }
             case "Delete": {
-                File record = new File(fileName);
-                if (record.exists()) {
-                    record.delete();
-                    response = new Response("Success");
-                } else {
-                    response = new Response("Failure");
-                }
+                response = deleteFile(record);
                 break;
             }
             default:
@@ -89,6 +83,30 @@ public class Server implements Runnable {
         }
 
         os.writeObject(response);
+    }
+
+    private Response deleteFile(File record) {
+        if (record.exists()) {
+            record.delete();
+            return new Response("Success");
+        } else {
+            return new Response("Failure");
+        }
+    }
+
+    private Response writeFile(Request request, File record) {
+        try {
+            FileWriter fw = new FileWriter(record, false);
+            Scanner myReader = new Scanner(request.getRecord());
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                fw.write(data);
+            }
+            myReader.close();
+            return new Response("Success");
+        } catch (IOException e) {
+            return new Response("Failure");
+        }
     }
 
     private void newListener() {
