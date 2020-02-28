@@ -83,13 +83,16 @@ public class Client {
             System.out.println(response.getStatus());
 
             if(response.getRecord() != null){
-                Scanner myReader = new Scanner(response.getRecord());
-                while (myReader.hasNextLine()) {
-                    String data = myReader.nextLine();
-                    System.out.println(data);
+                File record = new File("./record");
+
+                if(record.createNewFile()){
+                    System.out.println("File created in directory");
+                } else {
+                    System.out.println("Failure");
                 }
-                myReader.close();
+
             }
+
         } catch (IOException | ClassNotFoundException e){
             e.printStackTrace();
         }

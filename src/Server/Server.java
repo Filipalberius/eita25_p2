@@ -85,14 +85,12 @@ public class Server implements Runnable {
         os.writeObject(response);
     }
 
-    //TODO
     private Response createFile(File record) {
         try {
             if(record.createNewFile()){
                 return new Response("Success");
             } else {
                 return new Response("Failure");
-
             }
         } catch (IOException e) {
             e.printStackTrace();
