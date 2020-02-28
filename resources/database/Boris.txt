@@ -1,1 +1,1 @@
-Patient Boris¤Dr. Alice¤Nurse Bob¤A1¤hello my name is Boris and I am very sick :C.
+Boris¤Dr. Alice¤Nurse Bob¤A1¤hello my name is Boris and I am very sick :C.

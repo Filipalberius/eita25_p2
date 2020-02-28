@@ -53,11 +53,7 @@ public class Client {
             throw new IOException(e.getMessage());
         }
         socket = (SSLSocket) factory.createSocket(host, port);
-        System.out.println("\nsocket before handshake:\n" + socket + "\n");
-
         socket.startHandshake();
-
-        System.out.println("secure connection established\n\n");
     }
 
     private void sendRequest() throws IOException {

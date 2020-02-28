@@ -24,12 +24,13 @@ public class Audit {
 
         StringBuilder sb = new StringBuilder();
         sb.append(new Timestamp(System.currentTimeMillis()).toString()).
-                append("Request: ").
+                append(". Request: ").
                 append(request.toString()).
                 append(". Requester: ").
                 append(requesterName).
                 append(". Response: ").
-                append(response.toString());
+                append(response.toString()).
+                append("\n");
 
         try {
             Files.write(Paths.get("../resources/database/AuditLog.txt"), sb.toString().getBytes(), StandardOpenOption.APPEND);
