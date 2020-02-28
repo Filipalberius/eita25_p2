@@ -35,16 +35,21 @@ public class Client {
         SSLSocketFactory factory;
         try {
             Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter your Name: ");
+            String identity = scanner.next();
             System.out.print("Enter your password: ");
             char[] password = scanner.next().toCharArray();
+
 
             KeyStore ks = KeyStore.getInstance("JKS");
             KeyStore ts = KeyStore.getInstance("JKS");
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
             TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
             SSLContext ctx = SSLContext.getInstance("TLS");
-            ks.load(new FileInputStream("Client/clientkeystore.jks"), password);  // keystore password (storepass)
-            ts.load(new FileInputStream("Client/clienttruststore.jks"), password); // truststore password (storepass);
+            String KSPath = "Client/"+identity+"/clientkeystore.jks";
+            String TSPath = "Client/"+identity+"/clienttruststore.jks";
+            ks.load(new FileInputStream(KSPath), password);  // keystore password (storepass)
+            ts.load(new FileInputStream(TSPath), password); // truststore password (storepass);
             kmf.init(ks, password); // user password (keypass)
             tmf.init(ts); // keystore can be used as truststore here
             ctx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
@@ -83,7 +88,7 @@ public class Client {
             System.out.println(response.getStatus());
 
             if(response.getRecord() != null){
-                File record = new File("./record");
+                File record = new File("Client/record");
 
                 if(record.createNewFile()){
                     System.out.println("File created in directory");
