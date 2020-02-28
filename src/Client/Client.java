@@ -69,10 +69,14 @@ public class Client {
         String patient = read.readLine();
         System.out.println("Request type: ");
         String requestType = read.readLine();
-        if(requestType.toLowerCase().equals("write") || requestType.toLowerCase().equals("create")) {
+        if(requestType.toLowerCase().equals("write")) {
             System.out.println("File path: ");
             String filePath = read.readLine();
             request = new Request(patient, requestType, filePath);
+        } else if (requestType.toLowerCase().equals("create")){
+            System.out.println("Nurse ");
+            String nurseName = read.readLine();
+            request = new Request(patient, requestType, nurseName, true);
         } else {
             request = new Request(patient, requestType);
         }

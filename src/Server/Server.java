@@ -6,7 +6,11 @@ import Messages.Response;
 import java.io.*;
 import java.net.*;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.KeyStore;
+import java.sql.Timestamp;
 import java.util.Scanner;
 import javax.net.*;
 import javax.net.ssl.*;
@@ -52,7 +56,21 @@ public class Server implements Runnable {
         String requestType = request.getRequestType();
         Response response;
 
-        if(AccessControl.checkCredentials(subject, request)){
+        String requesterName = "";
+        String requesterDivision = "";
+
+        String[] split = subject.split(",");
+        for (String x : split) {
+            if (x.contains("CN=")) {
+                requesterName = x.trim().substring(3);
+            }
+
+            if (x.contains("OU=")){
+                requesterDivision =  x.trim().substring(3);
+            }
+        }
+
+        if(AccessControl.checkCredentials(requesterName, requesterDivision, request)){
             String fileName = "../resources/database/" + request.getPatient() + ".txt";
             File record = new File(fileName);
 
@@ -69,7 +87,7 @@ public class Server implements Runnable {
                     break;
                 }
                 case "create": {
-                    response = createFile(record);
+                    response = createFile(record, request, requesterName, requesterDivision);
                     break;
                 }
                 default:
@@ -77,17 +95,31 @@ public class Server implements Runnable {
                     break;
             }
 
-            audit.addEntry(subject, request, response);
+            audit.addEntry(requesterName, request, response);
         } else {
             response = new Response("Access Denied");
-            audit.addEntry(subject, request, response);
+            audit.addEntry(requesterName, request, response);
         }
         os.writeObject(response);
     }
 
-    private Response createFile(File record) {
+    private Response createFile(File record, Request request, String requesterName, String requesterDivision) {
         try {
             if(record.createNewFile()){
+                StringBuilder sb = new StringBuilder();
+                sb.append(request.getPatient()).
+                        append("¤").
+                        append(requesterName).
+                        append("¤").
+                        append(request.getNurse()).
+                        append("¤").
+                        append(requesterDivision).
+                        append("¤");
+                try {
+                    Files.write(Paths.get("../resources/database/" + request.getPatient() + ".txt"), sb.toString().getBytes(), StandardOpenOption.APPEND);
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
                 return new Response("Success");
             } else {
                 return new Response("Failure");

@@ -5,10 +5,9 @@ import Messages.Request;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
 public class AccessControl {
 
-    public static Boolean checkCredentials(String subject, Request request) {
+    public static Boolean checkCredentials(String requesterName, String requesterDivision, Request request) {
         String recordPath = "../resources/database/" + request.getPatient() + ".txt";
         Record record = null;
         try {
@@ -16,21 +15,6 @@ public class AccessControl {
         } catch (FileNotFoundException e) {
             System.out.println("Record not found.");
         }
-
-        String requesterName = "";
-        String requesterDivision = "";
-
-        String[] split = subject.split(",");
-        for (String x : split) {
-            if (x.contains("CN=")) {
-                requesterName = x.trim().substring(3);
-            }
-
-            if (x.contains("OU=")){
-                requesterDivision =  x.trim().substring(3);
-            }
-        }
-
 
         boolean access = false;
 

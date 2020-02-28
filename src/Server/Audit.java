@@ -10,16 +10,7 @@ import java.sql.Timestamp;
 
 public class Audit {
 
-    void addEntry(String subject, Request request, Response response){
-        String requesterName = "";
-
-        String[] split = subject.split(",");
-        for (String x : split) {
-            if (x.contains("CN=")) {
-                requesterName = x.trim().substring(3);
-                System.out.println(requesterName);
-            }
-        }
+    void addEntry(String requesterName, Request request, Response response){
 
         StringBuilder sb = new StringBuilder();
         sb.append(new Timestamp(System.currentTimeMillis()).toString()).
