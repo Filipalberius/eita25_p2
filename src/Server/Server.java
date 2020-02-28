@@ -27,14 +27,6 @@ public class Server implements Runnable {
             SSLSession session = socket.getSession();
             X509Certificate cert = (X509Certificate) session.getPeerCertificateChain()[0];
             String subject = cert.getSubjectDN().getName();
-            String requester;
-            String[] split = subject.split(",");
-            for (String x : split) {
-                if (x.contains("CN=")) {
-                    requester = x.trim();
-                    System.out.println(x.trim());
-                }
-            }
 
             System.out.println("client connected");
             System.out.println("client name (cert subject DN field): " + subject);
@@ -44,7 +36,7 @@ public class Server implements Runnable {
             Request request =(Request)is.readObject();
 
             //Send Response
-            sendResponse(socket, request);
+            sendResponse(socket, request, subject);
 
             socket.close();
         } catch (IOException | ClassNotFoundException e) {
@@ -53,34 +45,36 @@ public class Server implements Runnable {
         }
     }
 
-    private void sendResponse(SSLSocket socket, Request request) throws IOException {
+    private void sendResponse(SSLSocket socket, Request request, String subject) throws IOException {
         ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
         String requestType = request.getRequestType();
         Response response;
 
-        //if(AccessControl.checkCredentials()){
+        if(AccessControl.checkCredentials(subject, request)){
+            String fileName = "../resources/database/" + request.getPatient() + ".txt";
+            File record = new File(fileName);
 
-        //}
-        //Run only if access is given!
-        String fileName = "../resources/database/" + request.getPatient() + ".txt";
-        File record = new File(fileName);
-
-        switch (requestType) {
-            case "Read":
-                response = new Response("Success", record);
-                break;
-            case "Write": {
-                response = writeFile(request, record);
-                break;
+            switch (requestType) {
+                case "Read":
+                    response = new Response("Success", record);
+                    break;
+                case "Write": {
+                    response = writeFile(request, record);
+                    break;
+                }
+                case "Delete": {
+                    response = deleteFile(record);
+                    break;
+                }
+                default:
+                    response = new Response("Failure");
+                    break;
             }
-            case "Delete": {
-                response = deleteFile(record);
-                break;
-            }
-            default:
-                response = new Response("Failure");
-                break;
+        } else {
+            response = new Response("Access Denied");
         }
+        //Run only if access is given!
+
 
         os.writeObject(response);
     }

@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 
 public class AccessControl {
 
-    public static Boolean checkCredentials(String requester, Request request) {
+    public static Boolean checkCredentials(String subject, Request request) {
         String recordPath = "../resources/database/" + request.getPatient() + ".txt";
         Record record = null;
         try {
@@ -18,8 +18,21 @@ public class AccessControl {
             System.out.println("Record not found.");
         }
 
-        String requesterName = requester.split(", ")[0];
-        String requesterDivision = requester.split(", ")[1];
+        String requesterName = "";
+        String requesterDivision = "";
+
+        String[] split = subject.split(",");
+        for (String x : split) {
+            if (x.contains("CN=")) {
+                requesterName = x.trim();
+                System.out.println(x);
+            }
+           if (x.contains("OU=")){
+               requesterDivision =  x.trim();
+           }
+
+        }
+
 
         boolean access = false;
 
