@@ -5,6 +5,7 @@ import Messages.Response;
 
 import java.io.*;
 import java.net.*;
+import java.nio.channels.FileChannel;
 import java.security.KeyStore;
 import java.util.Scanner;
 import javax.net.*;
@@ -82,13 +83,22 @@ public class Server implements Runnable {
 
     //TODO
     private Response createFile(File record) {
-        return new Response("Success");
+        try {
+            if(record.createNewFile()){
+                return new Response("Success");
+            } else {
+                return new Response("Failure");
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new Response("Failure");
+        }
     }
 
     //TODO: fix this
     private Response deleteFile(File record) {
-        if (record.exists()) {
-            record.delete();
+        if (record.delete()) {
             return new Response("Success");
         } else {
             return new Response("Failure");
@@ -99,13 +109,10 @@ public class Server implements Runnable {
     private Response writeFile(Request request, File record) {
         try {
             if(record.exists()){
-                FileWriter fw = new FileWriter(record, false);
-                Scanner myReader = new Scanner(request.getRecord());
-                while (myReader.hasNextLine()) {
-                    String data = myReader.nextLine();
-                    fw.write(data);
-                }
-                myReader.close();
+                FileChannel src = new FileInputStream(request.getRecord()).getChannel();
+                FileChannel dest = new FileOutputStream(record).getChannel();
+                dest.transferFrom(src, 0, src.size());
+
                 return new Response("Success");
             } else {
                 return new Response("Record does not exist.");

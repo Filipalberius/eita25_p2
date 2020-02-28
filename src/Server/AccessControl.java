@@ -13,7 +13,6 @@ public class AccessControl {
         Record record = null;
         try {
             record = new Record(new File(recordPath));
-            System.out.println(record.getPatient());
         } catch (FileNotFoundException e) {
             System.out.println("Record not found.");
         }
@@ -25,11 +24,9 @@ public class AccessControl {
         for (String x : split) {
             if (x.contains("CN=")) {
                 requesterName = x.trim().substring(3);
-                System.out.println(requesterName);
             }
            if (x.contains("OU=")){
                requesterDivision =  x.trim().substring(3);
-               System.out.println(requesterDivision);
            }
 
         }

@@ -1,4 +1,1 @@
-Doctor: Alice
-Nurse: Bob
-Patient: Boris
-hello my name is Boris and I am very sick :C.
+Patient Boris¤Dr. Alice¤Nurse Bob¤A1¤hello my name is Boris and I am very sick :C.
