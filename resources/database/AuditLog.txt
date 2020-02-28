@@ -2,3 +2,12 @@
 2020-02-28 11:45:04.028. Request: Boris, read. Requester: Dr. Jeff. Response: Success
 2020-02-28 11:46:36.695. Request: Boris, write. Requester: Dr. Jeff. Response: Access Denied
 2020-02-28 11:47:50.58. Request: Smith, write. Requester: Dr. Jeff. Response: Success
+2020-02-28 13:25:47.355. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-02-28 13:27:38.728. Request: Smith, write. Requester: Dr._Alban. Response: Access Denied
+2020-02-28 13:37:13.797. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-02-28 13:38:40.027. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-02-28 13:40:05.758. Request: Smith, write. Requester: Dr._Alban. Response: Failure
+2020-02-28 13:40:48.829. Request: Smith, write. Requester: Dr._Alban. Response: Success
+2020-02-28 13:44:33.689. Request: Smith, delete. Requester: Government. Response: Access Denied
+2020-02-28 13:45:41.039. Request: Smith, delete. Requester: Government. Response: Success
+2020-02-28 13:48:07.334. Request: Smith, create. Requester: Dr._Alban. Response: Success
