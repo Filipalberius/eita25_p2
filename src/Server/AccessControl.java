@@ -25,10 +25,10 @@ public class AccessControl {
             if (x.contains("CN=")) {
                 requesterName = x.trim().substring(3);
             }
-           if (x.contains("OU=")){
-               requesterDivision =  x.trim().substring(3);
-           }
 
+            if (x.contains("OU=")){
+                requesterDivision =  x.trim().substring(3);
+            }
         }
 
 

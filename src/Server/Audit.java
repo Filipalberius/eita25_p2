@@ -2,7 +2,6 @@ package Server;
 
 import Messages.Request;
 import Messages.Response;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,7 +10,7 @@ import java.sql.Timestamp;
 
 public class Audit {
 
-    public void addEntry(String subject, Request request, Response response){
+    void addEntry(String subject, Request request, Response response){
         String requesterName = "";
 
         String[] split = subject.split(",");
@@ -35,11 +34,7 @@ public class Audit {
         try {
             Files.write(Paths.get("../resources/database/AuditLog.txt"), sb.toString().getBytes(), StandardOpenOption.APPEND);
         }catch (IOException e) {
-            //exception handling left as an exercise for the reader
+            e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-
     }
 }

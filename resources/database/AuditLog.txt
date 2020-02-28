@@ -1,4 +1,4 @@
-2020-02-28 11:41:58.177Request: read, Boris. Requester: Dr. Jeff. Response: Access Denied
+2020-02-28 11:41:58.177. Request: read, Boris. Requester: Dr. Jeff. Response: Access Denied
 2020-02-28 11:45:04.028. Request: Boris, read. Requester: Dr. Jeff. Response: Success
 2020-02-28 11:46:36.695. Request: Boris, write. Requester: Dr. Jeff. Response: Access Denied
 2020-02-28 11:47:50.58. Request: Smith, write. Requester: Dr. Jeff. Response: Success

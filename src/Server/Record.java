@@ -39,9 +39,4 @@ public class Record {
     public String getDivision(){
         return this.division;
     }
-
-    public static void main(String[] args) {
-        System.out.println(AccessControl.checkCredentials("Doctor Alban, Division X", new Request("Kent", "read")));
-    }
-
 }
