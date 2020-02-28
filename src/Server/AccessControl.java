@@ -26,6 +26,7 @@ public class AccessControl {
             if (x.contains("CN=")) {
                 requesterName = x.trim().substring(3);
                 System.out.println(requesterName);
+                System.out.println(record.getDoctor());
             }
            if (x.contains("OU=")){
                requesterDivision =  x.trim().substring(3);
@@ -37,7 +38,7 @@ public class AccessControl {
 
         boolean access = false;
 
-        if (request.getRequestType().matches("read")) {
+        if (request.getRequestType().matches("Read")) {
             access = (requesterName.matches(record.getDoctor()) || requesterName.matches(record.getNurse()) ||
                     requesterDivision.matches(record.getDivision()) || requesterName.matches(record.getPatient()));
         }
