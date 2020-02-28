@@ -1,4 +1,1 @@
-Doctor: Jeff
-Nurse: Jeffina
-Patient: Smith
-hello my name is Smith and I feel great C:.
+Patient Smith ¤ Dr. Jeff ¤ Nurse Jeffina ¤ hello my name is Smith and I feel great C:.

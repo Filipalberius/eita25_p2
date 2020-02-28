@@ -24,11 +24,12 @@ public class AccessControl {
         String[] split = subject.split(",");
         for (String x : split) {
             if (x.contains("CN=")) {
-                requesterName = x.trim();
-                System.out.println(x);
+                requesterName = x.trim().substring(3);
+                System.out.println(requesterName);
             }
            if (x.contains("OU=")){
-               requesterDivision =  x.trim();
+               requesterDivision =  x.trim().substring(3);
+               System.out.println(requesterDivision);
            }
 
         }
