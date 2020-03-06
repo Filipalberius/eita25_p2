@@ -11,3 +11,27 @@
 2020-02-28 13:44:33.689. Request: Smith, delete. Requester: Government. Response: Access Denied
 2020-02-28 13:45:41.039. Request: Smith, delete. Requester: Government. Response: Success
 2020-02-28 13:48:07.334. Request: Smith, create. Requester: Dr._Alban. Response: Success
+2020-02-28 14:13:40.48. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-02-28 14:14:53.484. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-02-28 14:15:38.522. Request: Smith, delete. Requester: Government. Response: Success
+2020-02-28 14:16:24.245. Request: Smith, create. Requester: Dr._Alban. Response: Success
+2020-02-28 14:17:13.68. Request: Smith, write. Requester: Dr._Alban. Response: Success
+2020-02-28 14:22:31.214. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-02-28 14:30:42.835. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-02-28 14:31:40.271. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-03-03 10:59:44.224. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-03-03 11:00:41.433. Request: Test, create. Requester: Dr._Alban. Response: Success
+2020-03-03 11:01:27.5. Request: Test, read. Requester: Dr._Alban. Response: Success
+2020-03-03 11:02:25.018. Request: Test, write. Requester: Dr._Alban. Response: Success
+2020-03-03 11:22:19.564. Request: Smith, read. Requester: Dr._Alban. Response: Success
+2020-03-03 11:23:01.977. Request: Smith, read. Requester: Dr._House. Response: Success
+2020-03-03 11:24:00.013. Request: Boris, write. Requester: Dr._Alban. Response: Access Denied
+2020-03-03 11:24:35.512. Request: Smith, write. Requester: Nurse Jeff. Response: Success
+2020-03-03 11:25:22.401. Request: Boris, write. Requester: Nurse Jeff. Response: Access Denied
+2020-03-03 11:25:46.973. Request: Boris, delete. Requester: Government. Response: Success
+2020-03-03 11:26:26.876. Request: Boris, create. Requester: Dr._House. Response: Success
+2020-03-03 11:27:03.732. Request: Boris, read. Requester: Dr._House. Response: Success
+2020-03-03 11:28:00.658. Request: Boris, write. Requester: Dr._House. Response: Success
+2020-03-03 11:28:41.504. Request: Boris, read. Requester: Patient Boris. Response: Success
+2020-03-03 11:29:08.427. Request: Smith, read. Requester: Patient Boris. Response: Success
+2020-03-03 11:35:58.0. Request: Smith, read. Requester: Patient Boris. Response: Access Denied

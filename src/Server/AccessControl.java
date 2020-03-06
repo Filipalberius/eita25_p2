@@ -19,12 +19,16 @@ public class AccessControl {
         boolean access = false;
 
         if (request.getRequestType().toLowerCase().matches("read")) {
-            access = (requesterName.matches(record.getDoctor()) || requesterName.matches(record.getNurse()) ||
-                    requesterDivision.matches(record.getDivision()) || requesterName.matches(record.getPatient()) || requesterDivision.matches("Government"));
+            access = (requesterName.matches(record.getDoctor())
+                    || requesterName.matches(record.getNurse())
+                    || requesterDivision.matches(record.getDivision()) && !requesterName.contains("Patient")
+                    || requesterName.matches(record.getPatient())
+                    || requesterDivision.matches("Government"));
         }
 
         if (request.getRequestType().toLowerCase().matches("write")) {
-            access = (requesterName.matches(record.getDoctor()) || requesterName.matches(record.getNurse()));
+            access = (requesterName.matches(record.getDoctor())
+                    || requesterName.matches(record.getNurse()));
         }
 
         if (request.getRequestType().toLowerCase().matches("delete")) {
